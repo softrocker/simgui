@@ -21,17 +21,3 @@ cmake ..
 ## Dependencies:
 [Dear ImGui](https://github.com/ocornut/imgui)
 [SDL](https://github.com/libsdl-org/SDL)
-
-## How to build:
-```
-mkdir external
-cd external
-git clone https://github.com/ocornut/imgui.git
-git clone https://github.com/libsdl-org/SDL.git
-cd ..
-git clone https://github.com/softrocker/simgui.git
-cd simgui
-mkdir build
-cd build
-cmake ..
-```
