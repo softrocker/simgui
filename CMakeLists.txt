@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.8)
 project(simgui)
 
-set(IMGUI_ROOT_DIR ../external/imgui-master)
-set(IMGUI_BACKENDS_DIR ../external/imgui-master/backends)
+set(IMGUI_ROOT_DIR ../external/imgui)
+set(IMGUI_BACKENDS_DIR ../external/imgui/backends)
 include_directories(${IMGUI_ROOT_DIR})
 include_directories(${IMGUI_BACKENDS_DIR})
-include_directories(../external/SDL2/include)
+include_directories(../external/SDL/include)
 
 set(CMAKE_CXX_STANDARD 14)
 
