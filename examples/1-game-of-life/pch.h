@@ -1,0 +1,1 @@
+#define let const auto

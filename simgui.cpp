@@ -55,7 +55,7 @@ int simgui_init(void(*draw_func)(void))
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    SDL_Window* window = SDL_CreateWindow("GLK_GUI", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+    SDL_Window* window = SDL_CreateWindow("Simgui", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
     SDL_GL_MakeCurrent(window, gl_context);
     SDL_GL_SetSwapInterval(1); // Enable vsync
@@ -181,7 +181,7 @@ int simgui(void(*draw_func)(void))
     static std::thread t;
     if (draw_func)
     {
-        std::cout << "GUI thread started!" << std::endl;
+        std::cout << "[simgui] GUI thread started!" << std::endl;
         t = std::thread([draw_func](){simgui_init(draw_func);});
     }
     else
@@ -191,7 +191,7 @@ int simgui(void(*draw_func)(void))
         event.type = SDL_QUIT;
         SDL_PushEvent(&event);
         t.join();
-        std::cout << "GUI thread finished!" << std::endl;
+        std::cout << "[simgui] GUI thread finished!" << std::endl;
         return 0;
     }
     return 0;
