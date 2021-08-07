@@ -5,16 +5,16 @@ project(GameOfLife)
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
-set(IMGUI_ROOT_DIR ../../../external/imgui-master)
+set(IMGUI_ROOT_DIR ../../../external/imgui)
 include_directories(${IMGUI_ROOT_DIR})
 
-set(IMGUI_BACKENDS_DIR ../../../external/imgui-master/backends)
+set(IMGUI_BACKENDS_DIR ../../../external/imgui/backends)
 include_directories(${IMGUI_BACKENDS_DIR})
 
-set(SDL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../../../external/SDL2/include)
+set(SDL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../../../external/SDL/include)
 include_directories(${SDL_INCLUDE_DIR})
 
-set(SDL_LIB_DIR ${CMAKE_SOURCE_DIR}/../../../external/SDL2/build/Debug)
+set(SDL_LIB_DIR ${CMAKE_SOURCE_DIR}/../../../external/SDL/build/Debug)
 link_directories(${SDL_LIB_DIR})
 
 set(SIMGUI_DIR ${CMAKE_SOURCE_DIR}/../../)
