@@ -1,6 +1,3 @@
-// GameOfLife.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
 #include <chrono>
 #include "GameOfLife.h"
@@ -9,19 +6,24 @@
 
 static auto time_start = std::chrono::high_resolution_clock::now();
 static auto time_period_msec = 200;
+
 static auto rows = 40;
 static auto cols = 40;
-
 static game_of_life game(rows, cols);
 static board b = game.get_board();
 
+static bool active = false; 
+
+ImVec2 operator+(const ImVec2& lhs, const ImVec2& rhs)
+{
+    return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y);
+}
+
 void draw_ui()
 {
-    /* static auto rows = 40;
-            static auto cols = 40;*/
-    static auto size_square = 20;
-    static auto colorBack = ImGui::GetColorU32(IM_COL32(0, 0, 255, 255));
-    static auto colorCell = ImGui::GetColorU32(IM_COL32(0, 255, 0, 255));
+    static auto size_of_cell = 20;
+    static auto color_of_back = ImGui::GetColorU32(IM_COL32(0, 0, 255, 255));
+    static auto color_of_cell = ImGui::GetColorU32(IM_COL32(0, 255, 0, 255));
 
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
@@ -31,36 +33,65 @@ void draw_ui()
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
     ImGui::Begin("Game of Life");
-    // Рисуем доску из 50x50 квадратов (пока пустых):
-    const ImVec2 p_base = ImGui::GetCursorScreenPos();
-    const auto spacing = 2;
+	
+    const ImVec2 p_base = ImGui::GetCursorScreenPos() + ImVec2(0, 50);
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
     auto time_now = std::chrono::high_resolution_clock::now();
-    auto d_time = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - time_start).count();
-    if (time_period_msec < d_time)
+    auto d_time = 
+        std::chrono::duration_cast<std::chrono::milliseconds>(time_now - time_start).count();
+	
+	if(ImGui::Button("PAUSE/RESUME"))
+	{
+		active = !active;
+	}
+
+    ImGui::SameLine();
+
+    active ? ImGui::Text("STATE: ACTIVE") : ImGui::Text("STATE: PAUSED");
+
+    if (ImGui::Button("CLEAR"))
     {
-        b = game.next_iteration();
+        game.clear_board();
+    }
+
+    ImGuiIO& io = ImGui::GetIO();
+	
+    if ((time_period_msec < d_time))
+    {
         time_start = time_now;
+        b = active ? game.next_iteration() : game.get_board();
+    }
+
+    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+    {
+        auto row = static_cast<int>((io.MousePos.y - p_base.y) / size_of_cell);
+        auto col = static_cast<int>((io.MousePos.x - p_base.x) / size_of_cell);
+        std::cout << "Cell = " << '(' << row << ',' << col << ')' <<
+            std::endl;
+        if ((0 <= row) && (row < rows) && (0 <= col) && (col < cols))
+        {
+            auto value = game.get(row, col);
+            game.set(row, col, !value);
+        }
     }
 
     for (auto row = 0; row < rows; row++)
     {
         for (auto col = 0; col < cols; col++)
         {
-            auto x = p_base.x + col * size_square;
-            auto y = p_base.y + row * size_square;
+            auto x = p_base.x + col * size_of_cell;
+            auto y = p_base.y + row * size_of_cell;
             if (!b.get(row, col))
             {
-                draw_list->AddRect(ImVec2(x, y), ImVec2(x + size_square,
-                    y + size_square), colorBack);
+                draw_list->AddRect(ImVec2(x, y), ImVec2(x + size_of_cell,
+                    y + size_of_cell), color_of_back);
             }
             else
             {
-                draw_list->AddRectFilled(ImVec2(x, y), ImVec2(x + size_square,
-                    y + size_square), colorCell);
+                draw_list->AddRectFilled(ImVec2(x, y), ImVec2(x + size_of_cell,
+                    y + size_of_cell), color_of_cell);
             }
-
         }
     }
 
@@ -70,36 +101,9 @@ void draw_ui()
 
 int main()
 {
-    game.set(0, 3, true);
-    
-    game.set(1, 4, true);
-    game.set(2, 2, true);
-    game.set(2, 3, true);
-    game.set(2, 4, true);
-
-    game.set(0, 14, true);
-    game.set(1, 13, true);
-    game.set(2, 13, true);
-    game.set(2, 14, true);
-    game.set(2, 15, true);
-
     simgui(draw_ui);
     std::cout << "Press any key to finish the program." << std::endl;
     char a;
     std::cin >> a;
     simgui(nullptr);
-
-
-
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

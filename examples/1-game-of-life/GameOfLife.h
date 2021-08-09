@@ -42,8 +42,10 @@ class game_of_life
 public:
     game_of_life(int rows, int cols);
     void set(int row, int col, bool on);
+    bool get(int row, int col);
     board next_iteration();
     board get_board();
+    void clear_board();
 private:
     int count_neighbors(int row, int col);
     board _board;

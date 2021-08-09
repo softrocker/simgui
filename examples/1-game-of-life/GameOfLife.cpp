@@ -11,6 +11,11 @@ void game_of_life::set(int row, int col, bool value)
     _board.set(row, col, value);
 }
 
+bool game_of_life::get(int row, int col)
+{
+     return _board.get(row, col);
+}
+
 board game_of_life::next_iteration()
 {
     let rows = _board.rows();
@@ -68,5 +73,16 @@ int game_of_life::count_neighbors(int row, int col)
         }
     }
     return count;
+}
+
+void game_of_life::clear_board()
+{
+    for (auto row = 0; row < _board.rows(); row++)
+    {
+        for (auto col = 0; col < _board.cols(); col++)
+        {
+            _board.set(row, col, false);
+        }
+    }
 }
 
