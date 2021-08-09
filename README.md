@@ -4,7 +4,7 @@ This library is a wrapper around the [Dear ImGui](https://github.com/ocornut/img
 More precisely, this is a modified "SDL + OpenGL-2" example with an API,
 which allows C++ programmers to create GUI-based applications from the console ones.
 
-![Alt text](GameOfLife.gif) / ![](GameOfLife.gif)
+![](GameOfLife.gif)
 
 ## How to use:
 1. Download libraries that we need (Dear ImGui, SDL and this project):
