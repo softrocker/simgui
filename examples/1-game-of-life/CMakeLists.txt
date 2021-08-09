@@ -5,17 +5,20 @@ project(GameOfLife)
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
-set(IMGUI_ROOT_DIR ../../../external/imgui)
+set(IMGUI_ROOT_DIR ${CMAKE_SOURCE_DIR}/../../../external/imgui)
 include_directories(${IMGUI_ROOT_DIR})
 
-set(IMGUI_BACKENDS_DIR ../../../external/imgui/backends)
+set(IMGUI_BACKENDS_DIR ${CMAKE_SOURCE_DIR}/../../../external/imgui/backends)
 include_directories(${IMGUI_BACKENDS_DIR})
 
 set(SDL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../../../external/SDL/include)
 include_directories(${SDL_INCLUDE_DIR})
 
-set(SDL_LIB_DIR ${CMAKE_SOURCE_DIR}/../../../external/SDL/build/Debug)
-link_directories(${SDL_LIB_DIR})
+if(WIN32)
+	set(SDL_LIB_DIR ${CMAKE_SOURCE_DIR}/../../../external/SDL/build/Debug)
+else()
+	set(SDL_LIB_DIR ${CMAKE_SOURCE_DIR}/../../../external/SDL/build)
+endif()
 
 set(SIMGUI_DIR ${CMAKE_SOURCE_DIR}/../../)
 include_directories(${SIMGUI_DIR})
@@ -66,11 +69,24 @@ if(WIN32)
 	Setupapi.lib)
 endif()
 
-set(STATIC_LIB_SUFFIX .a)
+
 if(WIN32)
 	set(STATIC_LIB_SUFFIX .lib)
+else()
+	set(STATIC_LIB_SUFFIX .a)
 endif()
 
-target_link_libraries(GameOfLife ${SDL_LIB_DIR}/SDL2-staticd${STATIC_LIB_SUFFIX} 
-	${ADDITIONAL_LIBS}
-)
+if(WIN32)
+	target_link_libraries(GameOfLife ${SDL_LIB_DIR}/SDL2-staticd${STATIC_LIB_SUFFIX} 
+	${ADDITIONAL_LIBS})
+else()
+	target_link_libraries(GameOfLife
+	${ADDITIONAL_LIBS} ${SDL_LIB_DIR}/libSDL2${STATIC_LIB_SUFFIX} -lGL -ldl -lpthread)
+endif()
+
+
+
+
+
+# ${SDL_LIB_DIR}/libSDL2${STATIC_LIB_SUFFIX
+
